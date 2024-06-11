@@ -1,16 +1,14 @@
 'use client';
 
-import type { ElementRef } from 'react';
-import type { ListWithCards } from '@/types';
-
 import { Draggable, Droppable } from '@hello-pangea/dnd';
-
-import { cn } from '@/lib/utils';
-
-import { ListHeader } from './list-header';
 import { useRef, useState } from 'react';
+
 import { CardForm } from './card-form';
 import { CardItem } from './card-item';
+import type { ElementRef } from 'react';
+import { ListHeader } from './list-header';
+import type { ListWithCards } from '@/types';
+import { cn } from '@/lib/utils';
 
 interface ListItemProps {
     data: ListWithCards;
@@ -18,6 +16,7 @@ interface ListItemProps {
 }
 
 export const ListItem = ({ data, index }: ListItemProps) => {
+    // console.log(data)
     const textareaRef = useRef<ElementRef<'textarea'>>(null);
     const [isEditing, setIsEditing] = useState(false);
 

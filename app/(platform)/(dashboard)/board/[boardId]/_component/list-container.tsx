@@ -1,17 +1,15 @@
 'use client';
 
-import type { ListWithCards } from '@/types';
-
-import { useEffect, useState } from 'react';
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
-
-import { useAction } from '@/hooks/use-action';
-import { updateListOrder } from '@/actions/update-list-order';
-import { updateCardOrder } from '@/actions/update-card-order';
+import { useEffect, useState } from 'react';
 
 import { ListForm } from './list-form';
 import { ListItem } from './list-item';
+import type { ListWithCards } from '@/types';
 import { toast } from 'sonner';
+import { updateCardOrder } from '@/actions/update-card-order';
+import { updateListOrder } from '@/actions/update-list-order';
+import { useAction } from '@/hooks/use-action';
 
 interface ListContainerProps {
     data: ListWithCards[];
@@ -52,15 +50,20 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
 
     const onDragEnd = (result: any) => {
         const { destination, source, type } = result;
+
+        // console.log(!destination)
+        // console.log(destination.droppabledId === source.droppabledId)
+        // console.log(destination.index === source.index)
+
         if (!destination) return;
 
         // if dropped in the same position
-        if (
-            destination.droppabledId === source.droppabledId &&
-            destination.index === source.index
-        ) {
-            return;
-        }
+        // if (
+        //     destination.droppabledId === source.droppabledId &&
+        //     destination.index === source.index
+        // ) {
+        //     return;
+        // }
 
         // if user moves a list
         if (type === 'list') {
