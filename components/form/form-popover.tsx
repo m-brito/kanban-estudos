@@ -38,11 +38,13 @@ export const FormPopover = ({
 
     const { execute, fieldErrors } = useAction(createBoard, {
         onSuccess: data => {
+            console.log('sucesso');
             toast.success('Board created');
             closeRef.current?.click();
-            router.push(`/board/${data.id}`);
+            // router.push(`/board/${data.id}`);
         },
         onError: error => {
+            console.log('erro');
             toast.error(error);
             proModal.onOpen();
         },

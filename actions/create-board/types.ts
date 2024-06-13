@@ -1,9 +1,14 @@
-import type { Board } from '@prisma/client';
 import type { ActionState } from '@/lib/create-safe-atcion';
-
+import { CreateBoard } from './schema';
+import { Nullable } from 'unsplash-js/dist/helpers/typescript';
 import { z } from 'zod';
 
-import { CreateBoard } from './schema';
-
 export type InputeType = z.infer<typeof CreateBoard>;
-export type ReturnType = ActionState<InputeType, Board>;
+
+interface ResultType {
+    message?: string;
+    error?: string;
+}
+
+export type ReturnType = ActionState<InputeType, ResultType>;
+

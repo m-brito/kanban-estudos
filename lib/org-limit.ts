@@ -1,77 +1,77 @@
-import { auth } from '@clerk/nextjs';
-import { db } from '@/lib/db';
 import { MAX_FREE_BOARD } from '@/constants/boards';
 
 export const incrementAvailableCount = async () => {
-    const { orgId } = auth();
+    // const { orgId } = auth();
 
-    if (!orgId) throw new Error('Unauthorized');
+    // if (!orgId) throw new Error('Unauthorized');
 
-    const orgLimit = await db.orgLimit.findUnique({
-        where: { orgId },
-    });
+    // const orgLimit = await db.orgLimit.findUnique({
+    //     where: { orgId },
+    // });
 
-    if (orgLimit) {
-        await db.orgLimit.update({
-            where: { orgId },
-            data: { count: orgLimit.count + 1 },
-        });
-    } else {
-        await db.orgLimit.create({
-            data: { orgId, count: 1 },
-        });
-    }
+    // if (orgLimit) {
+    //     await db.orgLimit.update({
+    //         where: { orgId },
+    //         data: { count: orgLimit.count + 1 },
+    //     });
+    // } else {
+    //     await db.orgLimit.create({
+    //         data: { orgId, count: 1 },
+    //     });
+    // }
 };
 
 export const decreaseAvailableCount = async () => {
-    const { orgId } = auth();
+    // const { orgId } = auth();
 
-    if (!orgId) throw new Error('Unauthorized');
+    // if (!orgId) throw new Error('Unauthorized');
 
-    const orgLimit = await db.orgLimit.findUnique({
-        where: { orgId },
-    });
+    // const orgLimit = await db.orgLimit.findUnique({
+    //     where: { orgId },
+    // });
 
-    if (orgLimit) {
-        await db.orgLimit.update({
-            where: { orgId },
-            data: { count: orgLimit.count > 0 ? orgLimit.count - 1 : 0 },
-        });
-    } else {
-        await db.orgLimit.create({
-            data: { orgId, count: 1 },
-        });
-    }
+    // if (orgLimit) {
+    //     await db.orgLimit.update({
+    //         where: { orgId },
+    //         data: { count: orgLimit.count > 0 ? orgLimit.count - 1 : 0 },
+    //     });
+    // } else {
+    //     await db.orgLimit.create({
+    //         data: { orgId, count: 1 },
+    //     });
+    // }
 };
 
 export const hasAvailableCount = async () => {
-    const { orgId } = auth();
+    // const { orgId } = auth();
 
-    if (!orgId) throw new Error('Unauthorized');
+    // if (!orgId) throw new Error('Unauthorized');
 
-    const orgLimit = await db.orgLimit.findUnique({
-        where: { orgId },
-    });
+    // const orgLimit = await db.orgLimit.findUnique({
+    //     where: { orgId },
+    // });
 
-    if (!orgLimit || orgLimit.count < MAX_FREE_BOARD) {
-        return true;
-    } else {
-        return false;
-    }
+    // if (!orgLimit || orgLimit.count < MAX_FREE_BOARD) {
+    //     return true;
+    // } else {
+    //     return false;
+    // }
+    //PERMISSAO PARA CRIAR MAIS BOARDS
+    return true;
 };
 
 export const gatAvailableCount = async () => {
-    const { orgId } = auth();
+    // const { orgId } = auth();
 
-    if (!orgId) return 0;
+    // if (!orgId) return 0;
 
-    const orgLimit = await db.orgLimit.findUnique({
-        where: { orgId },
-    });
+    // const orgLimit = await db.orgLimit.findUnique({
+    //     where: { orgId },
+    // });
 
-    if (!orgLimit) {
-        return 0;
-    } else {
-        return orgLimit.count;
-    }
+    // if (!orgLimit) {
+    //     return 0;
+    // } else {
+    //     return orgLimit.count;
+    // }
 };

@@ -1,6 +1,16 @@
 import { Sidebar } from '../_components/sidebar';
+import { redirect } from 'next/dist/server/api-utils';
+import { useAuth } from '@/app/context/AuthContext';
+import { useRouter } from 'next/router';
 
 const OrganizationLayout = ({ children }: { children: React.ReactNode }) => {
+    // const { user } = useAuth();
+    // const router = useRouter();
+
+    // if (!user) {
+    //     router.push('/');
+    // }
+
     return (
         <main className="max-w-6xl px-4 pt-20 md:pt-24 2xl:max-w-screen-xl">
             <div className="flex gap-x-7">

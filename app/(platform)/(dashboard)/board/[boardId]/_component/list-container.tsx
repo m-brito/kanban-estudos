@@ -3,16 +3,16 @@
 import { DragDropContext, Droppable } from '@hello-pangea/dnd';
 import { useEffect, useState } from 'react';
 
+import { KanbanColumn } from '../types';
 import { ListForm } from './list-form';
 import { ListItem } from './list-item';
-import type { ListWithCards } from '@/types';
 import { toast } from 'sonner';
 import { updateCardOrder } from '@/actions/update-card-order';
 import { updateListOrder } from '@/actions/update-list-order';
 import { useAction } from '@/hooks/use-action';
 
 interface ListContainerProps {
-    data: ListWithCards[];
+    data: KanbanColumn[];
     boardId: string;
 }
 
@@ -58,12 +58,12 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
         if (!destination) return;
 
         // if dropped in the same position
-        // if (
-        //     destination.droppabledId === source.droppabledId &&
-        //     destination.index === source.index
-        // ) {
-        //     return;
-        // }
+        if (
+            destination.droppabledId === source.droppabledId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
 
         // if user moves a list
         if (type === 'list') {
@@ -74,7 +74,7 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
             ).map((item, index) => ({ ...item, order: index }));
             setOrderedData(items);
 
-            executeUpdateListOrder({ items, boardId });
+            // executeUpdateListOrder({ items, boardId });
         }
 
         // if user moves a card
@@ -92,15 +92,15 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
             if (!sourceList || !destList) return;
 
             // Check if cards exists on the sourceList
-            if (!sourceList.cards) sourceList.cards = [];
+            if (!sourceList.items) sourceList.items = [];
 
             // Check if cards exists on the destList
-            if (!destList.cards) destList.cards = [];
+            if (!destList.items) destList.items = [];
 
             // Moving the card in the same list
             if (source.droppableId === destination.droppableId) {
                 const reorderedCards = reorder(
-                    sourceList.cards,
+                    sourceList.items,
                     source.index,
                     destination.index,
                 );
@@ -108,38 +108,37 @@ export const ListContainer = ({ data, boardId }: ListContainerProps) => {
                 reorderedCards.forEach((card, idx) => {
                     card.order = idx;
                 });
-
-                sourceList.cards = reorderedCards;
+                sourceList.items = reorderedCards;
                 setOrderedData(newOrderedData);
-                executeUpdateCardOrder({
-                    boardId,
-                    items: reorderedCards,
-                });
+                // executeUpdateCardOrder({
+                //     boardId,
+                //     items: reorderedCards,
+                // });
                 // User moves the card to another list
             } else {
                 // Remove card from the source list
-                const [movedCard] = sourceList.cards.splice(source.index, 1);
+                const [movedCard] = sourceList.items.splice(source.index, 1);
 
                 // Assign the new listId to the moved card
-                movedCard.listId = destination.droppableId;
+                movedCard.id = destination.droppableId;
 
                 // Add card to the destination list
-                destList.cards.splice(destination.index, 0, movedCard);
+                destList.items.splice(destination.index, 0, movedCard);
 
-                sourceList.cards.forEach((card, idx) => {
+                sourceList.items.forEach((card, idx) => {
                     card.order = idx;
                 });
 
                 // Update the order for each card in the destionation list
-                destList.cards.forEach((card, idx) => {
+                destList.items.forEach((card, idx) => {
                     card.order = idx;
                 });
 
                 setOrderedData(newOrderedData);
-                executeUpdateCardOrder({
-                    boardId,
-                    items: destList.cards,
-                });
+                // executeUpdateCardOrder({
+                //     boardId,
+                //     items: destList.cards,
+                // });
             }
         }
     };

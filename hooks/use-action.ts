@@ -1,6 +1,5 @@
 import type { ActionState, FieldErrors } from '@/lib/create-safe-atcion';
-
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 type Action<TInput, TOutput> = (
     data: TInput,
@@ -33,6 +32,7 @@ export const useAction = <TInput, TOutput>(
 
                 if (!result) return;
 
+                console.log(result)
                 setFieldErrors(result.fieldErrors);
 
                 if (result.error) {

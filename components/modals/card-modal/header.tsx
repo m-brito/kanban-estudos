@@ -1,21 +1,20 @@
 'use client';
 
-import type { CardWithList } from '@/types';
-import type { ElementRef } from 'react';
-
 import { useRef, useState } from 'react';
+
+import { CompleteKanbanItem } from '@/app/(platform)/(dashboard)/board/[boardId]/types';
+import type { ElementRef } from 'react';
+import { FormInput } from '@/components/form/form-input';
+import { Layout } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { toast } from 'sonner';
+import { updateCard } from '@/actions/update-card';
+import { useAction } from '@/hooks/use-action';
 import { useParams } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { Layout } from 'lucide-react';
-import { toast } from 'sonner';
-
-import { useAction } from '@/hooks/use-action';
-import { updateCard } from '@/actions/update-card';
-import { FormInput } from '@/components/form/form-input';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface HeaderProps {
-    data: CardWithList;
+    data: CompleteKanbanItem;
 }
 
 export const Header = ({ data }: HeaderProps) => {
@@ -47,7 +46,7 @@ export const Header = ({ data }: HeaderProps) => {
 
         if (title === data.title) return;
 
-        execute({ title, boardId, id: data.id });
+        execute({ title, boardId, id: data.id.toString() });
     };
 
     return (
@@ -64,7 +63,8 @@ export const Header = ({ data }: HeaderProps) => {
                     />
                 </form>
                 <p className=" text-sm text-muted-foreground">
-                    in list <span className="underline">{data.list.title}</span>
+                    in list{' '}
+                    <span className="underline">{data.column.toString()}</span>
                 </p>
             </div>
         </div>

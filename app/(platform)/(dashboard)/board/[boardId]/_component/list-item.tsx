@@ -6,12 +6,12 @@ import { useRef, useState } from 'react';
 import { CardForm } from './card-form';
 import { CardItem } from './card-item';
 import type { ElementRef } from 'react';
+import { KanbanColumn } from '../types';
 import { ListHeader } from './list-header';
-import type { ListWithCards } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface ListItemProps {
-    data: ListWithCards;
+    data: KanbanColumn;
     index: number;
 }
 
@@ -32,7 +32,7 @@ export const ListItem = ({ data, index }: ListItemProps) => {
     };
 
     return (
-        <Draggable draggableId={data.id} index={index}>
+        <Draggable draggableId={'i' + data.id.toString()} index={index}>
             {provided => (
                 <li
                     {...provided.draggableProps}
@@ -44,17 +44,17 @@ export const ListItem = ({ data, index }: ListItemProps) => {
                         className=" w-full rounded-md bg-[#f1f2f4] pb-2 shadow-md"
                     >
                         <ListHeader onAddCard={enableEditing} data={data} />
-                        <Droppable droppableId={data.id} type="card">
+                        <Droppable droppableId={data.id.toString()} type="card">
                             {provided => (
                                 <ol
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
                                     className={cn(
                                         'mx-1 flex flex-col gap-y-2 px-1 py-0.5',
-                                        data.cards.length > 0 ? 'mt-2' : 'mt-0',
+                                        data.items.length > 0 ? 'mt-2' : 'mt-0',
                                     )}
                                 >
-                                    {data.cards.map((card, index) => (
+                                    {data.items.map((card, index) => (
                                         <CardItem
                                             key={card.id}
                                             index={index}
@@ -67,7 +67,7 @@ export const ListItem = ({ data, index }: ListItemProps) => {
                         </Droppable>
                         <CardForm
                             ref={textareaRef}
-                            listId={data.id}
+                            listId={data.id.toString()}
                             isEditing={isEditing}
                             enableEditing={enableEditing}
                             disableEditing={disableEditing}

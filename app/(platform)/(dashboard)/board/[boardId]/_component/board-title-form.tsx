@@ -1,14 +1,14 @@
 'use client';
-import type { ElementRef } from 'react';
 
 import { useRef, useState } from 'react';
 
-import { FormInput } from '@/components/form/form-input';
+import { Board } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Board } from '@prisma/client';
+import type { ElementRef } from 'react';
+import { FormInput } from '@/components/form/form-input';
+import { toast } from 'sonner';
 import { updateBoard } from '@/actions/update-board';
 import { useAction } from '@/hooks/use-action';
-import { toast } from 'sonner';
 
 interface BoardTitleFormProps {
     data: Board;

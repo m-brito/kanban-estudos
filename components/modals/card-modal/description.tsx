@@ -1,23 +1,22 @@
 'use client';
 
-import type { CardWithList } from '@/types';
-
 import { ElementRef, useRef, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { useQueryClient } from '@tanstack/react-query';
 import { useEventListener, useOnClickOutside } from 'usehooks-ts';
-import { AlignLeft } from 'lucide-react';
 
-import { useAction } from '@/hooks/use-action';
-import { updateCard } from '@/actions/update-card';
+import { AlignLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CompleteKanbanItem } from '@/app/(platform)/(dashboard)/board/[boardId]/types';
 import { FormSubmit } from '@/components/form/form-submit';
 import { FormTextarea } from '@/components/form/form-textarea';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { updateCard } from '@/actions/update-card';
+import { useAction } from '@/hooks/use-action';
+import { useParams } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface DescriptionProps {
-    data: CardWithList;
+    data: CompleteKanbanItem;
 }
 
 export const Description = ({ data }: DescriptionProps) => {
@@ -67,7 +66,7 @@ export const Description = ({ data }: DescriptionProps) => {
         const description = formData.get('description') as string;
         const boardId = params.boardId as string;
 
-        execute({ id: data.id, description, boardId });
+        execute({ id: data.id.toString(), description, boardId });
     };
 
     return (
@@ -84,7 +83,7 @@ export const Description = ({ data }: DescriptionProps) => {
                             id="description"
                             className="mt-2 w-full"
                             placeholder="Add a more detail description"
-                            defaultValue={data.description || undefined}
+                            defaultValue={data.textDescription || undefined}
                             errors={fieldErrors}
                         />
                         <div className="flex items-center gap-x-2">
@@ -105,7 +104,8 @@ export const Description = ({ data }: DescriptionProps) => {
                         role="button"
                         className="min-h-[78px] rounded-md bg-neutral-200 px-3.5 py-3 text-sm font-medium"
                     >
-                        {data.description || 'Add a more detail description...'}
+                        {data.textDescription ||
+                            'Add a more detail description...'}
                     </div>
                 )}
             </div>

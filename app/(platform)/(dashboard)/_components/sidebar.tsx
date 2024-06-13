@@ -1,18 +1,15 @@
 'use client';
 
-import type { Organization } from './nav-item';
+import { CalendarDays, Plus } from 'lucide-react';
 
-import Link from 'next/link';
-import { Plus } from 'lucide-react';
-import { useLocalStorage } from 'usehooks-ts';
-import { useOrganization, useOrganizationList } from '@clerk/nextjs';
-
+import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
+import { Item } from '@radix-ui/react-accordion';
+import Link from 'next/link';
+import { NavItem } from './nav-item';
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Accordion } from '@/components/ui/accordion';
-
-import { NavItem } from './nav-item';
+import { useLocalStorage } from 'usehooks-ts';
 
 interface SidebarProps {
     storageKey?: string;
@@ -23,11 +20,11 @@ export const Sidebar = ({ storageKey = 't-sidebar-state' }: SidebarProps) => {
         storageKey,
         {},
     );
-    const { organization: activeOrganization, isLoaded: isLoadedOrg } =
-        useOrganization();
-    const { userMemberships, isLoaded: isLoadedOrgList } = useOrganizationList({
-        userMemberships: { infinite: true },
-    });
+    // const { organization: activeOrganization, isLoaded: isLoadedOrg } =
+    //     useOrganization();
+    // const { userMemberships, isLoaded: isLoadedOrgList } = useOrganizationList({
+    //     userMemberships: { infinite: true },
+    // });
 
     const defaultAccordionValue: string[] = Object.keys(expanded).reduce(
         (acc: string[], key: string) => {
@@ -42,26 +39,26 @@ export const Sidebar = ({ storageKey = 't-sidebar-state' }: SidebarProps) => {
         setExpanded(curr => ({ ...curr, [id]: !expanded[id] }));
     };
 
-    if (!isLoadedOrg || !isLoadedOrgList || userMemberships.isLoading) {
-        return (
-            <>
-                <div className="mb-2 flex items-center justify-between">
-                    <Skeleton className="h-10 w-[50%]" />
-                    <Skeleton className="h-10 w-10" />
-                </div>
-                <div className="space-y-2">
-                    <NavItem.Skeleton />
-                    <NavItem.Skeleton />
-                    <NavItem.Skeleton />
-                </div>
-            </>
-        );
-    }
+    // if (!isLoadedOrg || !isLoadedOrgList || userMemberships.isLoading) {
+    //     return (
+    //         <>
+    //             <div className="mb-2 flex items-center justify-between">
+    //                 <Skeleton className="h-10 w-[50%]" />
+    //                 <Skeleton className="h-10 w-10" />
+    //             </div>
+    //             <div className="space-y-2">
+    //                 <NavItem.Skeleton />
+    //                 <NavItem.Skeleton />
+    //                 <NavItem.Skeleton />
+    //             </div>
+    //         </>
+    //     );
+    // }
     return (
         <>
             <div className="mb-1 flex items-center text-xs font-medium">
-                <span className="pl-4">Workspaces</span>
-                <Button
+                <span className="pl-4">Menu</span>
+                {/* <Button
                     asChild
                     type="button"
                     size="icon"
@@ -71,22 +68,38 @@ export const Sidebar = ({ storageKey = 't-sidebar-state' }: SidebarProps) => {
                     <Link href="/select-org">
                         <Plus className="h-4 w-4" />
                     </Link>
-                </Button>
+                </Button> */}
             </div>
             <Accordion
                 type="multiple"
                 defaultValue={defaultAccordionValue}
                 className="space-y-2"
             >
-                {userMemberships.data.map(({ organization }) => (
-                    <NavItem
-                        key={organization.id}
-                        isActive={activeOrganization?.id === organization.id}
-                        isExpanded={expanded[organization.id]}
-                        organization={organization as Organization}
-                        onExpand={onExpand}
-                    />
-                ))}
+                <NavItem
+                    isActive={true}
+                    isExpanded={expanded['Calendario']}
+                    item={{
+                        slug: 'Calendario',
+                        icon: <CalendarDays />,
+                        name: 'Calendario',
+                        route: '/calendario',
+                    }}
+                    onExpand={onExpand}
+                />
+                {/* {userMemberships.data.map(({ organization }) => {
+                    // console.log(userMemberships)
+                    return (
+                        <NavItem
+                            key={organization.id}
+                            isActive={
+                                activeOrganization?.id === organization.id
+                            }
+                            isExpanded={expanded[organization.id]}
+                            organization={organization as Organization}
+                            onExpand={onExpand}
+                        />
+                    );
+                })} */}
             </Accordion>
         </>
     );

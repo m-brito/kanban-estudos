@@ -1,9 +1,7 @@
-import { z } from 'zod';
-
-import type { Card } from '@prisma/client';
 import type { ActionState } from '@/lib/create-safe-atcion';
-
+import { Card } from '../../types';
 import { DeleteCard } from './schema';
+import { z } from 'zod';
 
 export type InputeType = z.infer<typeof DeleteCard>;
 export type ReturnType = ActionState<InputeType, Card>;

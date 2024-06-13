@@ -1,24 +1,23 @@
 'use client';
 
-import type { ElementRef } from 'react';
-
-import { toast } from 'sonner';
-import { useRef } from 'react';
 import { MoreHorizontal, X } from 'lucide-react';
-import { List } from '@prisma/client';
-
 import {
     Popover,
     PopoverClose,
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
+
 import { Button } from '@/components/ui/button';
+import type { ElementRef } from 'react';
 import { FormSubmit } from '@/components/form/form-submit';
+import { List } from '@/types';
 import { Separator } from '@/components/ui/separator';
-import { useAction } from '@/hooks/use-action';
-import { deleteList } from '@/actions/delete-list';
 import { copyList } from '@/actions/copy-list';
+import { deleteList } from '@/actions/delete-list';
+import { toast } from 'sonner';
+import { useAction } from '@/hooks/use-action';
+import { useRef } from 'react';
 
 interface ListOptionsProps {
     data: List;

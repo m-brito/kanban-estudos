@@ -1,8 +1,7 @@
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
-import type { AuditLog } from '@prisma/client';
+import { AuditLog } from '@/types';
 import { format } from 'date-fns';
-import { generateLogMessage } from '@/lib/generate-log-message';
 
 interface ActivityItemProps {
     data: AuditLog;
@@ -19,7 +18,6 @@ export const ActivityItem = ({ data }: ActivityItemProps) => {
                     <span className=" font-semibold lowercase text-neutral-700">
                         {data.userName}
                     </span>{' '}
-                    {generateLogMessage(data)}
                 </p>
                 <p className="text-sm text-muted-foreground">
                     {format(

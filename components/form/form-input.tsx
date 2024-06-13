@@ -1,11 +1,11 @@
 'use client';
 
+import { FormErrors } from './form-errors';
+import { Input } from '../ui/input';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 import { forwardRef } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Label } from '@/components/ui/label';
-import { Input } from '../ui/input';
-import { cn } from '@/lib/utils';
-import { FormErrors } from './form-errors';
 
 interface FormInputProps {
     id: string;

@@ -1,37 +1,20 @@
 'use server';
 
 import type { InputeType, ReturnType } from './types';
-
-import { auth } from '@clerk/nextjs';
-import { revalidatePath } from 'next/cache';
-import { ACTION, ENTITY_TYPE } from '@prisma/client';
-
-import { db } from '@/lib/db';
-import { createSafeAction } from '@/lib/create-safe-atcion';
-import { createAuditLog } from '@/lib/create-audit-log';
-import { incrementAvailableCount, hasAvailableCount } from '@/lib/org-limit';
+import { hasAvailableCount, incrementAvailableCount } from '@/lib/org-limit';
 
 import { CreateBoard } from './schema';
-import { checkSubscription } from '@/lib/subscription';
+import { createAuditLog } from '@/lib/create-audit-log';
+import { createSafeAction } from '@/lib/create-safe-atcion';
+import { post } from '@/app/api/connection';
+import { revalidatePath } from 'next/cache';
+
+interface MessageResponse {
+    message: string;
+    error?: string;
+}
 
 const handler = async (data: InputeType): Promise<ReturnType> => {
-    const { userId, orgId } = auth();
-
-    if (!userId || !orgId) {
-        return {
-            error: 'Unauthorized',
-        };
-    }
-
-    const canCreate = await hasAvailableCount();
-    const isPro = await checkSubscription();
-
-    if (!canCreate && !isPro) {
-        return {
-            error: 'You have reached ypur limit of free  boards. Please upgrade to create more.',
-        };
-    }
-
     const { title, image } = data;
     const [imageId, imageThunbUrl, imageFullUrl, imageLinkHTML, imageUserName] =
         image.split('|');
@@ -46,35 +29,21 @@ const handler = async (data: InputeType): Promise<ReturnType> => {
         return { error: 'Missing fields. Failed to create board.' };
     }
 
-    let board;
-
     try {
-        board = await db.board.create({
+        const response = await post<MessageResponse>({
+            path: '/kanban/kanban',
             data: {
-                title,
-                orgId,
-                imageId,
-                imageThunbUrl,
-                imageFullUrl,
-                imageUserName,
-                imageLinkHTML,
+                name: title,
+                imagem: imageFullUrl
             },
         });
-        if (!isPro) {
-            await incrementAvailableCount();
-        }
-        await createAuditLog({
-            entityId: board.id,
-            entityTitle: board.title,
-            entityType: ENTITY_TYPE.BOARD,
-            action: ACTION.CREATE,
-        });
-    } catch (error) {
-        return { error: 'Failed to create' };
+        revalidatePath('/boards');
+
+        return { data: response };
+    } catch (e) {
+        return { error: 'Error.' };
     }
 
-    revalidatePath(`/board/${board.id}`);
-    return { data: board };
 };
 
 export const createBoard = createSafeAction(CreateBoard, handler);

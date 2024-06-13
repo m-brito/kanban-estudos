@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-import { toast } from "sonner";
+import { COOKIE_USER_TOKEN } from "../context/AuthContext";
+import Cookies from 'js-cookie';
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_HOST_URL!,
@@ -18,20 +19,16 @@ export const get = async <T>(path: string, options?: AxiosRequestConfig): Promis
 
 export const post = async <T>({
   path,
-  successMessage,
   data,
   options
 }: {
   path: string;
-  successMessage?: string;
   data: any;
   options?: AxiosRequestConfig;
 }): Promise<T> => {
   try {
+    console.log(api.defaults)
     const response = await api.post<T>(path, data, options);
-    if (successMessage) {
-      toast.success(successMessage);
-    }
     return response.data;
   } catch (error) {
     handleRequestError(error);
@@ -40,10 +37,17 @@ export const post = async <T>({
 };
 
 const handleRequestError = (error: any) => {
-  if (error.response) {
-    const errorMessage = error.response.data.message || error.response.statusText || "An error occurred";
-    toast.error(errorMessage);
-  } else {
-    toast.error("An unexpected error occurred");
+  if (error.response.status === 401) {
+    Cookies.remove(COOKIE_USER_TOKEN);
+    location.href = "/";
   }
+  console.error('Erro na requisição:', error);
+  throw new Error('Ocorreu um erro na requisição.');
+};
+
+export const setTokenInterceptor = (token: any) => {
+  api.interceptors.request.use((config) => {
+    config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
 };

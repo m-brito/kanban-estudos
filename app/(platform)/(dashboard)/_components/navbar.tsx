@@ -1,11 +1,9 @@
-import { OrganizationSwitcher, UserButton } from '@clerk/nextjs';
-import { Plus } from 'lucide-react';
-
-import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { FormPopover } from '@/components/form/form-popover';
-
+import { Logo } from '@/components/logo';
+import { LogoutPopover } from '@/components/form/logout-popover';
 import { MobileSidebar } from './mobile-sidebar';
+import { Plus } from 'lucide-react';
 
 export const Navbar = () => {
     return (
@@ -35,32 +33,15 @@ export const Navbar = () => {
                 </FormPopover>
             </div>
             <div className="ml-auto flex items-center gap-x-2">
-                <OrganizationSwitcher
-                    hidePersonal
-                    afterCreateOrganizationUrl="/organization/:id"
-                    afterLeaveOrganizationUrl="/select-org"
-                    afterSelectPersonalUrl="/organization/:id"
-                    appearance={{
-                        elements: {
-                            rootBox: {
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                            },
-                        },
-                    }}
-                />
-                <UserButton
-                    afterSignOutUrl="/"
-                    appearance={{
-                        elements: {
-                            avatarBox: {
-                                height: 30,
-                                width: 30,
-                            },
-                        },
-                    }}
-                />
+                <LogoutPopover align="start" side="bottom" sideOffset={18}>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="block h-auto  rounded-sm px-2 py-1.5"
+                    >
+                        Sair
+                    </Button>
+                </LogoutPopover>
             </div>
         </nav>
     );

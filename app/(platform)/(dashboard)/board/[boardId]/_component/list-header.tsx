@@ -1,24 +1,23 @@
 'use client';
+
+import { useRef, useState } from 'react';
+
 import type { ElementRef } from 'react';
-
-import { useState, useRef } from 'react';
-import { useEventListener } from 'usehooks-ts';
+import { FormInput } from '@/components/form/form-input';
+import { KanbanColumn } from '../types';
+import { ListOptions } from './list-options';
 import { toast } from 'sonner';
-
-import { List } from '@prisma/client';
 import { updateList } from '@/actions/update-list';
 import { useAction } from '@/hooks/use-action';
-import { FormInput } from '@/components/form/form-input';
-
-import { ListOptions } from './list-options';
+import { useEventListener } from 'usehooks-ts';
 
 interface ListHeaderProps {
-    data: List;
+    data: KanbanColumn;
     onAddCard: () => void;
 }
 
 export const ListHeader = ({ data, onAddCard }: ListHeaderProps) => {
-    const [title, setTitle] = useState(data.title);
+    const [title, setTitle] = useState(data.name);
     const [isEditing, setIsEditing] = useState(false);
 
     const formRef = useRef<ElementRef<'form'>>(null);
@@ -52,7 +51,7 @@ export const ListHeader = ({ data, onAddCard }: ListHeaderProps) => {
         const id = formData.get('id') as string;
         const boardId = formData.get('boardId') as string;
 
-        if (title === data.title) return disableEditing();
+        if (title === data.name) return disableEditing();
 
         execute({ title, boardId, id });
     };
@@ -78,12 +77,7 @@ export const ListHeader = ({ data, onAddCard }: ListHeaderProps) => {
                     className="flex-1 px-[2px]"
                 >
                     <input hidden id="id" name="id" value={data.id} />
-                    <input
-                        hidden
-                        id="boardId"
-                        name="boardId"
-                        value={data.boardId}
-                    />
+                    <input hidden id="boardId" name="boardId" value={data.id} />
                     <FormInput
                         id="title"
                         placeholder="Enter list title..."
@@ -102,7 +96,7 @@ export const ListHeader = ({ data, onAddCard }: ListHeaderProps) => {
                     {title}
                 </div>
             )}
-            <ListOptions onAddCard={onAddCard} data={data} />
+            {/* <ListOptions onAddCard={onAddCard} data={data} /> */}
         </div>
     );
 };

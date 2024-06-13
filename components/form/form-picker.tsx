@@ -1,16 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useFormStatus } from 'react-dom';
-import Image from 'next/image';
-import Link from 'next/link';
 import { Check, Loader2 } from 'lucide-react';
-
-import { unsplash } from '@/lib/unsplash';
-import { cn } from '@/lib/utils';
-import { defaultImages } from '@/constants/images';
+import { useEffect, useState } from 'react';
 
 import { FormErrors } from './form-errors';
+import Image from 'next/image';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
+import { defaultImages } from '@/constants/images';
+import { unsplash } from '@/lib/unsplash';
+import { useFormStatus } from 'react-dom';
 
 interface FormPickerProps {
     id: string;
@@ -22,8 +21,8 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
 
     const [images, setImages] =
         useState<Array<Record<string, any>>>(defaultImages);
-    const [isLoading, setIsloading] = useState(true);
-    const [selectedImageId, setSelectedImageId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedImageId, setSelectedImageId] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -44,11 +43,15 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
                 console.log(error);
                 setImages(defaultImages);
             } finally {
-                setIsloading(false);
+                setIsLoading(false);
             }
         };
         fetchImages();
     }, []);
+
+    const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedImageId(event.target.value.split('|')[0]);
+    };
 
     if (isLoading) {
         return (
@@ -76,10 +79,11 @@ export const FormPicker = ({ id, errors }: FormPickerProps) => {
                     >
                         <input
                             type="radio"
-                            id={id}
+                            id={`${id}-${image.id}`}
                             name={id}
                             className="hidden"
                             checked={selectedImageId === image.id}
+                            onChange={handleImageSelect}
                             disabled={pending}
                             value={`${image.id}|${image.urls.thumb}|${image.urls.full}|${image.links.html}|${image.user.name}`}
                         />

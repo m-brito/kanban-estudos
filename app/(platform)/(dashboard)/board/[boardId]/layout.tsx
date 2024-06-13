@@ -1,22 +1,32 @@
-import { auth } from '@clerk/nextjs';
 import { notFound, redirect } from 'next/navigation';
 
-import { db } from '@/lib/db';
-
 import { BoardNavbar } from './_component/board-navbar';
+import { KanbanColumn } from './types';
+import { get } from '@/app/api/connection';
+
+interface KanbanData {
+    kanban: {
+        id: number;
+        name: string;
+        imagem: string | null;
+        idMemberCreator: string;
+    };
+    columns: KanbanColumn[];
+    message: string;
+}
 
 export async function generateMetadata({
     params,
 }: {
     params: { boardId: string };
 }) {
-    const { orgId } = auth();
-    if (!orgId) return { title: 'Board' };
+    // const { orgId } = auth();
+    // if (!orgId) return { title: 'Board' };
 
-    const board = await db.board.findUnique({
-        where: { id: params.boardId, orgId },
-    });
-    return { title: board?.title || 'Board' };
+    // const board = await db.board.findUnique({
+    //     where: { id: params.boardId, orgId },
+    // });
+    return { title: 'Board' };
 }
 
 const BoardIdLayout = async ({
@@ -26,20 +36,22 @@ const BoardIdLayout = async ({
     children: React.ReactNode;
     params: { boardId: string };
 }) => {
-    const { orgId } = auth();
-    if (!orgId) return redirect('/select-ord');
+    // const { orgId } = auth();
+    // if (!orgId) return redirect('/select-ord');
 
-    const board = await db.board.findUnique({
-        where: { id: params.boardId, orgId },
-    });
-    if (!board) notFound();
+    // const board = await db.board.findUnique({
+    //     where: { id: params.boardId, orgId: '1' },
+    // });
+    const lists = await get<KanbanData>(`/kanban/kanban/${params.boardId}`);
+
+    if (!lists) notFound();
 
     return (
         <div
             className="relative h-full bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${board.imageFullUrl})` }}
+            style={{ backgroundImage: `url(${lists.kanban.imagem})` }}
         >
-            <BoardNavbar data={board} />
+            {/* <BoardNavbar data={board} /> */}
             <div className="absolute inset-0 bg-black/20" />
             <main className="relative h-full pt-28">{children}</main>
         </div>

@@ -1,21 +1,20 @@
 'use client';
 
-import type { CardWithList } from '@/types';
-
 import { Copy, Trash } from 'lucide-react';
-import { useParams } from 'next/navigation';
-import { toast } from 'sonner';
 
+import { Button } from '@/components/ui/button';
+import { Card } from '@/types';
+import { Skeleton } from '@/components/ui/skeleton';
 import { copyCard } from '@/actions/copy-card';
 import { deleteCard } from '@/actions/delete-card';
-import { useAction } from '@/hooks/use-action';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useCardModal } from '@/hooks/use-card-modal';
 import { error } from 'console';
+import { toast } from 'sonner';
+import { useAction } from '@/hooks/use-action';
+import { useCardModal } from '@/hooks/use-card-modal';
+import { useParams } from 'next/navigation';
 
 interface ActionsProps {
-    data: CardWithList;
+    data: Card;
 }
 
 export const Actions = ({ data }: ActionsProps) => {
