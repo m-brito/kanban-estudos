@@ -1,18 +1,17 @@
 'use client';
 
 import type { ElementRef, KeyboardEventHandler } from 'react';
-
-import { useParams } from 'next/navigation';
-import { forwardRef, useRef } from 'react';
 import { Plus, X } from 'lucide-react';
-import { useOnClickOutside, useEventListener } from 'usehooks-ts';
-import { toast } from 'sonner';
+import { forwardRef, useRef } from 'react';
+import { useEventListener, useOnClickOutside } from 'usehooks-ts';
 
-import { useAction } from '@/hooks/use-action';
-import { createCard } from '@/actions/create-card';
+import { Button } from '@/components/ui/button';
 import { FormSubmit } from '@/components/form/form-submit';
 import { FormTextarea } from '@/components/form/form-textarea';
-import { Button } from '@/components/ui/button';
+import { createCard } from '@/actions/create-card';
+import { toast } from 'sonner';
+import { useAction } from '@/hooks/use-action';
+import { useParams } from 'next/navigation';
 
 interface CardFormProps {
     listId: string;
@@ -24,7 +23,7 @@ interface CardFormProps {
 export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
     ({ listId, isEditing, enableEditing, disableEditing }, ref) => {
         const params = useParams();
-        const formRef = useRef<ElementRef<'form'>>(null);
+        const formRef = useRef<HTMLFormElement>(null); // Adjusted ref type
         const { execute, fieldErrors } = useAction(createCard, {
             onSuccess: data => {
                 toast.success(`Card "${data.title}" created`);
@@ -53,27 +52,36 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
 
         const onSubmit = (formData: FormData) => {
             const title = formData.get('title') as string;
-            const listId = formData.get('listId') as string;
+            const formListId = formData.get('listId') as string; // Rename to avoid conflict with prop
             const boardId = params.boardId as string;
 
-            execute({ title, listId, boardId });
+            execute({ title, listId: formListId, boardId });
         };
 
         if (isEditing) {
             return (
                 <form
                     ref={formRef}
-                    action={onSubmit}
+                    onSubmit={e => {
+                        e.preventDefault(); // Prevent default form submission
+                        onSubmit(new FormData(e.target as HTMLFormElement));
+                    }}
                     className="m-1 space-y-4 px-1 py-0.5"
                 >
                     <FormTextarea
                         id="title"
                         onKeyDown={onTextareaKeyDown}
                         ref={ref}
-                        placeholder="Enetr a title for this card..."
+                        placeholder="Enter a title for this card..."
                         errors={fieldErrors}
+                        defaultValue="" // Ensure defaultValue is set
                     />
-                    <input hidden id="listId" name="listId" value={listId} />
+                    <input
+                        type="hidden"
+                        id="listId"
+                        name="listId"
+                        value={listId}
+                    />
                     <div className="flex items-center gap-x-1">
                         <FormSubmit>Add card</FormSubmit>
                         <Button
@@ -87,6 +95,7 @@ export const CardForm = forwardRef<HTMLTextAreaElement, CardFormProps>(
                 </form>
             );
         }
+
         return (
             <div className="px-2 pt-2">
                 <Button
