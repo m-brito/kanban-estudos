@@ -1,7 +1,6 @@
-import Link from 'next/link';
-
-import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Logo } from '@/components/logo';
 
 export const Navbar = () => {
     return (
@@ -13,7 +12,7 @@ export const Navbar = () => {
                         <Link href="/sign-in">Login</Link>
                     </Button>
                     <Button size="sm" asChild>
-                        <Link href="/sign-up">Get Taskify for free</Link>
+                        <Link href="/sign-up">Sign up</Link>
                     </Button>
                 </div>
             </div>
