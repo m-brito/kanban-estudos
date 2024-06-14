@@ -22,26 +22,20 @@ const handler = async (data: InputeType): Promise<ReturnType> => {
 
     let board;
 
-    // try {
-    //     board = await db.board.delete({
-    //         where: {
-    //             id,
-    //             orgId,
-    //         },
-    //     });
-    //     if (!isPro) {
-    //         await decreaseAvailableCount();
-    // }
+    try {
+        // board = await db.board.delete({
+        //     where: {
+        //         id,
+        //         orgId,
+        //     },
+        // });
+        // if (!isPro) {
+        //     await decreaseAvailableCount();
+        // }
 
-    //     await createAuditLog({
-    //         entityId: board.id,
-    //         entityTitle: board.title,
-    //         entityType: ENTITY_TYPE.BOARD,
-    //         action: ACTION.DELETE,
-    //     });
-    // } catch (error) {
-    // return { error: 'Failed to delete.' };
-    // }
+    } catch (error) {
+        return { error: 'Failed to delete.' };
+    }
     return { error: 'Failed to delete.' };
     // revalidatePath(`/organization/${orgId}`);
     // redirect(`/organization/${orgId}`);
