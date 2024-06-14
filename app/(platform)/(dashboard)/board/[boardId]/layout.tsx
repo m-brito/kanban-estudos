@@ -15,26 +15,26 @@ interface KanbanData {
     message: string;
 }
 
-export async function generateMetadata({
-    params,
-}: {
-    params: { boardId: string };
-}) {
-    // const { orgId } = auth();
-    // if (!orgId) return { title: 'Board' };
+// export async function generateMetadata({
+//     params,
+// }: {
+//     params: { boardId: string };
+// }) {
+//     // const { orgId } = auth();
+//     // if (!orgId) return { title: 'Board' };
 
-    // const board = await db.board.findUnique({
-    //     where: { id: params.boardId, orgId },
-    // });
-    return { title: 'Board' };
-}
+//     // const board = await db.board.findUnique({
+//     //     where: { id: params.boardId, orgId },
+//     // });
+//     return { title: 'Board' };
+// }
 
 const BoardIdLayout = async ({
     children,
     params,
 }: {
     children: React.ReactNode;
-    params: { boardId: string };
+    params: { boardId: string | null };
 }) => {
     // const { orgId } = auth();
     // if (!orgId) return redirect('/select-ord');

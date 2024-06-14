@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import type { ElementRef } from 'react';
 import { FormSubmit } from '@/components/form/form-submit';
-import { List } from '@/types';
+import { KanbanColumn } from '../types';
 import { Separator } from '@/components/ui/separator';
 import { copyList } from '@/actions/copy-list';
 import { deleteList } from '@/actions/delete-list';
@@ -20,9 +20,10 @@ import { useAction } from '@/hooks/use-action';
 import { useRef } from 'react';
 
 interface ListOptionsProps {
-    data: List;
+    data: KanbanColumn;
     onAddCard: () => void;
 }
+
 export const ListOptions = ({ data, onAddCard }: ListOptionsProps) => {
     const closeRef = useRef<ElementRef<'button'>>(null);
 
@@ -72,12 +73,12 @@ export const ListOptions = ({ data, onAddCard }: ListOptionsProps) => {
                 side="bottom"
                 align="start"
             >
-                <div className=" pb-4 text-center text-sm font-medium text-neutral-600">
+                <div className="pb-4 text-center text-sm font-medium text-neutral-600">
                     List actions
                 </div>
                 <PopoverClose ref={closeRef} asChild>
                     <Button
-                        className=" absolute right-2 top-2 h-auto w-auto p-2 text-neutral-600"
+                        className="absolute right-2 top-2 h-auto w-auto p-2 text-neutral-600"
                         variant="ghost"
                     >
                         <X className="h-4 w-4" />
@@ -91,12 +92,12 @@ export const ListOptions = ({ data, onAddCard }: ListOptionsProps) => {
                     Add Cards
                 </Button>
                 <form action={onCopy}>
-                    <input hidden name="id" id="id" value={data.id} />
+                    <input hidden name="id" id="id" defaultValue={data.id} />
                     <input
                         hidden
                         name="boardId"
                         id="boardId"
-                        value={data.boardId}
+                        defaultValue={data.idKanban}
                     />
                     <FormSubmit
                         className="h-auto w-full justify-start rounded-none p-2 px-5 text-sm font-normal"
@@ -107,12 +108,12 @@ export const ListOptions = ({ data, onAddCard }: ListOptionsProps) => {
                 </form>
                 <Separator />
                 <form action={onDelete}>
-                    <input hidden name="id" id="id" value={data.id} />
+                    <input hidden name="id" id="id" defaultValue={data.id} />
                     <input
                         hidden
                         name="boardId"
                         id="boardId"
-                        value={data.boardId}
+                        defaultValue={data.idKanban}
                     />
                     <FormSubmit
                         className="h-auto w-full justify-start rounded-none p-2 px-5 text-sm font-normal"

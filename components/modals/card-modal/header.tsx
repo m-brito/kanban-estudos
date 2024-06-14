@@ -23,10 +23,11 @@ export const Header = ({ data }: HeaderProps) => {
 
     const { execute } = useAction(updateCard, {
         onSuccess: data => {
-            queryClient.invalidateQueries({ queryKey: ['card', data.id] });
-            queryClient.invalidateQueries({ queryKey: ['card-logs', data.id] });
-            toast.success(`Rename to "${data.title}"`);
-            setTitle(data.title);
+            // queryClient.invalidateQueries({ queryKey: ['card', data.id] });
+            // queryClient.invalidateQueries({ queryKey: ['card-logs', data.id] });
+            // toast.success(`Rename to "${data.title}"`);
+            toast.success(`Rename to card`);
+            // setTitle(data.title);
         },
         onError: error => {
             toast.error(error);
@@ -45,6 +46,8 @@ export const Header = ({ data }: HeaderProps) => {
         const boardId = params.boardId as string;
 
         if (title === data.title) return;
+
+        setTitle(data.title);
 
         execute({ title, boardId, id: data.id.toString() });
     };

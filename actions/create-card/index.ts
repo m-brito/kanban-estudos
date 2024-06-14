@@ -5,7 +5,13 @@ import type { InputeType, ReturnType } from './types';
 import { CreateCard } from './schema';
 import { createAuditLog } from '@/lib/create-audit-log';
 import { createSafeAction } from '@/lib/create-safe-atcion';
+import { post } from '@/app/api/connection';
 import { revalidatePath } from 'next/cache';
+
+interface ResultType {
+    message?: any;
+    error?: string;
+}
 
 const handler = async (data: InputeType): Promise<ReturnType> => {
     // const { userId, orgId } = auth();
@@ -16,51 +22,27 @@ const handler = async (data: InputeType): Promise<ReturnType> => {
     //     };
     // }
 
-    // const { title, boardId, listId } = data;
+    const { title, boardId, listId } = data;
 
     // let card;
 
-    // try {
-    //     const list = await db.list.findUnique({
-    //         where: {
-    //             id: listId,
-    //             board: { orgId },
-    //         },
-    //     });
+    try {
+        const response = await post<ResultType>({
+            path: '/kanban/card',
+            data: {
+                title: title,
+                column: listId,
+            },
+        });
+        revalidatePath(`/boards/${boardId}`);
 
-    //     if (!list) {
-    //         return { error: 'List not found' };
-    //     }
-
-    //     const lastCard = await db.card.findFirst({
-    //         where: { listId },
-    //         orderBy: { order: 'desc' },
-    //         select: { order: true },
-    //     });
-
-    //     const newOrder = lastCard ? lastCard.order + 1 : 1;
-
-    //     card = await db.card.create({
-    //         data: {
-    //             title,
-    //             listId,
-    //             order: newOrder,
-    //         },
-    //     });
-
-    //     await createAuditLog({
-    //         entityId: card.id,
-    //         entityTitle: card.title,
-    //         entityType: ENTITY_TYPE.CARD,
-    //         action: ACTION.CREATE,
-    //     });
-    // } catch (error) {
-    //     return { error: 'Failed to create.' };
-    // }
+        return { data: response };
+    } catch (e) {
+        return { error: 'Error.' };
+    }
 
     // revalidatePath(`/board/${boardId}`);
     // return { data: card };
-    return { error: 'Failed to create.' };
 };
 
 export const createCard = createSafeAction(CreateCard, handler);

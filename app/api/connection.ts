@@ -36,6 +36,24 @@ export const post = async <T>({
   }
 };
 
+export const patch = async <T>({
+  path,
+  data,
+  options
+}: {
+  path: string;
+  data: any;
+  options?: AxiosRequestConfig;
+}): Promise<T> => {
+  try {
+    const response = await api.patch<T>(path, data, options);
+    return response.data;
+  } catch (error) {
+    handleRequestError(error);
+    throw error;
+  }
+};
+
 const handleRequestError = (error: any) => {
   if (error.response.status === 401) {
     Cookies.remove(COOKIE_USER_TOKEN);

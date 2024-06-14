@@ -12,7 +12,7 @@ interface CardItemProps {
 export const CardItem = ({ data, index }: CardItemProps) => {
     const cardModal = useCardModal();
     return (
-        <Draggable draggableId={data.id.toString()} index={index}>
+        <Draggable draggableId={'i' + data.id.toString()} index={index}>
             {provided => (
                 <div
                     {...provided.draggableProps}

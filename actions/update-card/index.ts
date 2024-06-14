@@ -5,7 +5,13 @@ import type { InputeType, ReturnType } from './types';
 import { UpdateCard } from './schema';
 import { createAuditLog } from '@/lib/create-audit-log';
 import { createSafeAction } from '@/lib/create-safe-atcion';
+import { patch } from '@/app/api/connection';
 import { revalidatePath } from 'next/cache';
+
+interface ResultType {
+    message?: any;
+    error?: string;
+}
 
 const handler = async (data: InputeType): Promise<ReturnType> => {
     // const { userId, orgId } = auth();
@@ -16,37 +22,27 @@ const handler = async (data: InputeType): Promise<ReturnType> => {
     //     };
     // }
 
-    const { id, boardId, ...values } = data;
+    const { id, boardId, title, description } = data;
 
     let card;
 
-    // try {
-    //     card = await db.card.update({
-    //         where: {
-    //             id,
-    //             list: {
-    //                 board: {
-    //                     orgId,
-    //                 },
-    //             },
-    //         },
-    //         data: {
-    //             ...values,
-    //         },
-    //     });
-    //     await createAuditLog({
-    //         entityId: card.id,
-    //         entityTitle: card.title,
-    //         entityType: ENTITY_TYPE.CARD,
-    //         action: ACTION.UPDATE,
-    //     });
-    // } catch (error) {
-    //     return { error: 'Failed to update.' };
-    // }
+    try {
+        const response = await patch<ResultType>({
+            path: `/kanban/card/${id}`,
+            data: {
+                title: title,
+                textDescription: description,
+            },
+        });
+        revalidatePath(`/boards/${boardId}`);
+
+        return { data: response };
+    } catch (e) {
+        return { error: 'Error.' };
+    }
 
     // revalidatePath(`/board/${boardId}`);
     // return { data: card };
-    return { error: 'Failed to update.' };
 };
 
 export const updateCard = createSafeAction(UpdateCard, handler);

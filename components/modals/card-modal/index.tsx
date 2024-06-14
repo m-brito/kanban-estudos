@@ -43,7 +43,7 @@ export const CardModal = () => {
 
     const { data: auditLogData } = useQuery<AuditLog[]>({
         queryKey: ['card-logs', id],
-        queryFn: () => fetcher(`/api/cards/${id}/logs`),
+        // queryFn: () => fetcher(`/api/cards/${id}/logs`),
         enabled: !!id,
     });
 

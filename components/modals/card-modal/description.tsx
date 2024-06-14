@@ -27,6 +27,7 @@ export const Description = ({ data }: DescriptionProps) => {
 
     const formRef = useRef<ElementRef<'form'>>(null);
     const textareaRef = useRef<ElementRef<'textarea'>>(null);
+    const [description, setDescription] = useState(data.textDescription);
 
     const enableEditing = () => {
         setIsEditing(true);
@@ -48,13 +49,14 @@ export const Description = ({ data }: DescriptionProps) => {
 
     const { execute, fieldErrors } = useAction(updateCard, {
         onSuccess: data => {
-            queryClient.invalidateQueries({
-                queryKey: ['card', data.id],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ['card', data.id],
-            });
-            toast.success(`Card ${data.title} updated`);
+            // queryClient.invalidateQueries({
+            //     queryKey: ['card', data.id],
+            // });
+            // queryClient.invalidateQueries({
+            //     queryKey: ['card', data.id],
+            // });
+            // toast.success(`Card ${data.title} updated`);
+            toast.success(`Card updated`);
             disableEditing();
         },
         onError: error => {
@@ -67,6 +69,7 @@ export const Description = ({ data }: DescriptionProps) => {
         const boardId = params.boardId as string;
 
         execute({ id: data.id.toString(), description, boardId });
+        setDescription(description);
     };
 
     return (
@@ -83,7 +86,7 @@ export const Description = ({ data }: DescriptionProps) => {
                             id="description"
                             className="mt-2 w-full"
                             placeholder="Add a more detail description"
-                            defaultValue={data.textDescription || undefined}
+                            defaultValue={description || undefined}
                             errors={fieldErrors}
                         />
                         <div className="flex items-center gap-x-2">
@@ -104,8 +107,7 @@ export const Description = ({ data }: DescriptionProps) => {
                         role="button"
                         className="min-h-[78px] rounded-md bg-neutral-200 px-3.5 py-3 text-sm font-medium"
                     >
-                        {data.textDescription ||
-                            'Add a more detail description...'}
+                        {description || 'Add a more detail description...'}
                     </div>
                 )}
             </div>

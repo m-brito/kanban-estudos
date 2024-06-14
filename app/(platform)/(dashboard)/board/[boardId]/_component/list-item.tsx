@@ -32,7 +32,7 @@ export const ListItem = ({ data, index }: ListItemProps) => {
     };
 
     return (
-        <Draggable draggableId={'i' + data.id.toString()} index={index}>
+        <Draggable draggableId={'l' + data.id.toString()} index={index}>
             {provided => (
                 <li
                     {...provided.draggableProps}
